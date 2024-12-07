@@ -10,8 +10,8 @@ from hypothesis.strategies import DataObject, data, integers, lists, permutation
 import minitorch
 from minitorch import MathTestVariable, Tensor, TensorBackend, grad_check
 
-from .strategies import assert_close, small_floats
-from .tensor_strategies import assert_close_tensor, shaped_tensors, tensors
+from tests.strategies import assert_close, small_floats
+from tests.tensor_strategies import assert_close_tensor, shaped_tensors, tensors
 
 one_arg, two_arg, red_arg = MathTestVariable._comp_testing()
 

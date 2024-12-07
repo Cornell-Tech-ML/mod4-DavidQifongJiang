@@ -15,6 +15,11 @@ class SGD(Optimizer):
         self.lr = lr
 
     def zero_grad(self) -> None:
+        """Sets gradients of all parameters to zero.
+
+        This is typically called before the backward pass in a training loop to ensure
+        that gradients from the previous forward-backward passes do not accumulate..
+        """
         for p in self.parameters:
             if p.value is None:
                 continue
@@ -26,6 +31,7 @@ class SGD(Optimizer):
                     p.value.grad = None
 
     def step(self) -> None:
+        """Performs a single optimization step."""
         for p in self.parameters:
             if p.value is None:
                 continue
