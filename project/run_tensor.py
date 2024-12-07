@@ -1,19 +1,41 @@
 """
-Be sure you have minitorch installed in you Virtual Env.
->>> pip install -Ue .
+This module runs tensor operations for the project.
+It describes the purpose of the module and provides an overview of the file.
 """
-
 import minitorch
-
-# Use this function to make a random parameter in
-# your module.
 def RParam(*shape):
     r = 2 * (minitorch.rand(shape) - 0.5)
     return minitorch.Parameter(r)
 
+class Network(minitorch.Module):
+    def __init__(self, hidden_layers):
+        super().__init__()
+        self.layer1 = Linear(2, hidden_layers)  # Input size 2
+        self.layer2 = Linear(hidden_layers, hidden_layers)  # Hidden layer to hidden layer
+        self.layer3 = Linear(hidden_layers, 1)  # Hidden layer to output
+
+
+    def forward(self, x):
+        hidden_output = self.layer1.forward(x).relu()
+        hidden_output = self.layer2.forward(hidden_output).relu()
+        return self.layer3.forward(hidden_output).sigmoid()
+
+class Linear(minitorch.Module):
+    def __init__(self, in_size, out_size):
+        super().__init__()
+        self.w = RParam(in_size, out_size)
+        self.b = RParam(out_size)
+
+        self.out_size = out_size
+
+    def forward(self, inputs):
+        batch_size, input_dimensions= inputs.shape
+        return (
+            self.w.value.view(1, input_dimensions, self.out_size)* inputs.view(batch_size, input_dimensions, 1)).sum(1).view(batch_size, self.out_size) + self.b.value.view(self.out_size)
 
 def default_log_fn(epoch, total_loss, correct, losses):
     print("Epoch ", epoch, " loss ", total_loss, "correct", correct)
+
 
 
 class TensorTrain:
@@ -62,8 +84,26 @@ class TensorTrain:
 
 
 if __name__ == "__main__":
-    PTS = 50
-    HIDDEN = 2
-    RATE = 0.5
+    PTS = 75
+    HIDDEN = 3
+    RATE = 0.1
     data = minitorch.datasets["Simple"](PTS)
+    TensorTrain(HIDDEN).train(data, RATE)
+
+    PTS = 75
+    DATASET = minitorch.datasets["Diag"](PTS)
+    HIDDEN = 8
+    RATE = 0.1
+    TensorTrain(HIDDEN).train(data, RATE)
+
+    PTS = 75
+    DATASET = minitorch.datasets["Split"](PTS)
+    HIDDEN = 12
+    RATE = 0.1
+    TensorTrain(HIDDEN).train(data, RATE)
+
+    PTS = 75
+    DATASET = minitorch.datasets["Xor"](PTS)
+    HIDDEN = 10
+    RATE = 0.1
     TensorTrain(HIDDEN).train(data, RATE)

@@ -1,3 +1,11 @@
+"""Minitorch: A lightweight deep learning framework.
+
+This package includes core functionality for:
+- Autograd: Automatic differentiation.
+- CUDA operations: Accelerated computation for GPUs.
+- Datasets: Tools for dataset creation and manipulation.
+"""
+
 from .testing import MathTest, MathTestVariable  # type: ignore # noqa: F401,F403
 from .datasets import *  # noqa: F401,F403
 from .optim import *  # noqa: F401,F403
